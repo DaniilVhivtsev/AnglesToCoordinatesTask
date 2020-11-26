@@ -8,12 +8,19 @@ namespace Manipulation
     {
         public static PointF[] GetJointPositions(double shoulder, double elbow, double wrist)
         {
-            var elbowPos = new PointF(0, 0) + CoordinatesOfAngle(Manipulator.UpperArm, shoulder);
-            var angle = shoulder - Math.PI + elbow;
-            var wristPos = elbowPos + CoordinatesOfAngle(Manipulator.Forearm, angle);
-            angle += wrist - Math.PI;
-            var palmEndPos = wristPos + CoordinatesOfAngle(Manipulator.Palm, angle);
+            var elbowX = UpperArm * Cos(shoulder);
+            var elbowY = UpperArm * Sin(shoulder);
+            var elbowPos = new PointF((float) elbowX, (float) elbowY);
 
+            var angle2 = elbow + shoulder - PI;
+            var wristX = Forearm * Cos(angle2) + elbowX;
+            var wristY = Forearm * Sin(angle2) + elbowY;
+            var wristPos = new PointF((float) wristX, (float) wristY);
+
+            var angle3 = wrist + angle2 - PI;
+            var palmX = Palm * Cos(angle3) + wristX;
+            var palmY = Palm * Sin(angle3) + wristY;
+            var palmEndPos = new PointF((float) palmX, (float) palmY);
             return new PointF[]
             {
                 elbowPos,
